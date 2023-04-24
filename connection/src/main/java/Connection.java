@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class Connection {
 
@@ -9,11 +11,11 @@ public class Connection {
     private final BufferedReader in;
     private final BufferedWriter out;
 
-    public Connection(Socket socket, ConnectionListener listener) throws IOException {
+    public Connection(ConnectionListener listener, Socket socket) throws IOException {
         this.socket = socket;
         this.listener = listener;
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -23,7 +25,7 @@ public class Connection {
                         listener.receiveString(Connection.this, in.readLine());
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    listener.exception(Connection.this, e);
                 } finally {
                     listener.disconnect(Connection.this);
                 }
@@ -51,5 +53,8 @@ public class Connection {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "Connection (" + socket.getLocalSocketAddress() + ")";
+    }
 }
