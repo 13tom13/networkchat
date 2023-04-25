@@ -11,8 +11,10 @@ public class ClientWindow extends JFrame implements ActionListener, ConnectionLi
     private static final int WIDTH = 600;
     private static final int HEIGHT = 400;
     private final JTextArea log = new JTextArea();
-    private final JTextField nickname = new JTextField("user");
+    private final JTextArea nickname = new JTextArea();
     private final JTextField input = new JTextField();
+
+    private static StartWindow startWindow;
 
     private Connection connection;
 
@@ -20,17 +22,21 @@ public class ClientWindow extends JFrame implements ActionListener, ConnectionLi
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new ClientWindow();
+                startWindow = new StartWindow();
             }
         });
     }
 
-    private ClientWindow() {
+    ClientWindow() {
+        nickname.append(startWindow.name);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
         log.setEditable(false);
         log.setLineWrap(true);
+        log.setBackground(Color.LIGHT_GRAY);
+        nickname.setEditable(false);
+        nickname.setBackground(Color.GRAY);
         input.addActionListener(this);
         add(log, BorderLayout.CENTER);
         add(input, BorderLayout.SOUTH);
