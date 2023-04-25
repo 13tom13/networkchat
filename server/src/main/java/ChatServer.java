@@ -1,5 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ public class ChatServer implements ConnectionListener {
 
     private ChatServer(){
         System.out.println("Server start...");
-        try (ServerSocket serverSocket = new ServerSocket(getPort())){
+        try (ServerSocket serverSocket = new ServerSocket(8993)){
             while (true){
                  try {
                      new Connection(this, serverSocket.accept());
@@ -59,19 +57,4 @@ public class ChatServer implements ConnectionListener {
         }
     }
 
-    private int getPort () {
-        try (BufferedReader fileReader = new BufferedReader(new FileReader("Setting.txt"))) {
-            String line;
-            String setting = "port";
-            while ((line = fileReader.readLine()) != null) {
-                if (line.startsWith(setting)){
-                    return Integer.parseInt(line.substring(setting.length()).trim());
-                }
-            }
-
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
 }

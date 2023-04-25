@@ -11,6 +11,10 @@ public class Connection {
     private final BufferedReader in;
     private final BufferedWriter out;
 
+    public Connection (ConnectionListener listener, String ip, int port) throws IOException{
+        this(listener, new Socket(ip, port));
+    }
+
     public Connection(ConnectionListener listener, Socket socket) throws IOException {
         this.socket = socket;
         this.listener = listener;
@@ -57,4 +61,6 @@ public class Connection {
     public String toString() {
         return "Connection (" + socket.getLocalSocketAddress() + ")";
     }
+
+
 }
