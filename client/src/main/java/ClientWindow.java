@@ -2,7 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.*;
 
 public class ClientWindow extends JFrame implements ActionListener, ConnectionListener {
 
@@ -16,6 +18,8 @@ public class ClientWindow extends JFrame implements ActionListener, ConnectionLi
 
     private static StartWindow startWindow;
 
+    private final Logger LOGGER;
+
     private Connection connection;
 
     public static void main(String[] args) {
@@ -26,8 +30,8 @@ public class ClientWindow extends JFrame implements ActionListener, ConnectionLi
             }
         });
     }
-
-    ClientWindow() {
+    protected ClientWindow() {
+        LOGGER = Logger.getLogger(ClientWindow.class.getName());
         nickname.append(startWindow.name);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
@@ -42,7 +46,8 @@ public class ClientWindow extends JFrame implements ActionListener, ConnectionLi
         add(input, BorderLayout.SOUTH);
         add(nickname, BorderLayout.NORTH);
         setVisible(true);
-        try {
+        try (FileInputStream inLog = new FileInputStream("client/src/main/resources/log.config")) {
+            LogManager.getLogManager().readConfiguration(inLog);
             connection = new Connection(this, IP, PORT);
         } catch (IOException e) {
             printMessage("Connection exception: " + e);
@@ -60,21 +65,25 @@ public class ClientWindow extends JFrame implements ActionListener, ConnectionLi
     @Override
     public void connectionReady(Connection connection) {
         printMessage("Connection ready");
+        LOGGER.log(Level.INFO,"Connection ready");
     }
 
     @Override
     public void disconnect(Connection connection) {
         printMessage("Connection close");
+        LOGGER.log(Level.INFO,"Connection close");
     }
 
     @Override
     public void receiveString(Connection connection, String value) {
         printMessage(value);
+        LOGGER.log(Level.INFO,"Message: ("+ value + ")");
     }
 
     @Override
     public void exception(Connection connection, Exception e) {
         printMessage("Connection exception: " + e);
+        LOGGER.log(Level.FINE,"Connection exception: " + e);
     }
 
     private synchronized void printMessage(String msg) {
