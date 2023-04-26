@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class Connection {
@@ -38,7 +37,7 @@ public class Connection {
         thread.start();
     }
 
-    public synchronized void sendMesage(String msg) {
+    public synchronized void sendMessage(String msg) {
         try {
             out.write(msg + "\r\n");
             out.flush();

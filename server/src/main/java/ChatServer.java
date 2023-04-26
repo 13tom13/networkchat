@@ -14,10 +14,13 @@ public class ChatServer implements ConnectionListener {
     private final ArrayList<Connection> connections = new ArrayList<>();
 
     private final Logger LOGGER;
+
+    public final Setting setting;
     private ChatServer(){
+        setting = Setting.getInstance();
         System.out.println("Server start...");
         LOGGER = Logger.getLogger(ChatServer.class.getName());
-        try (ServerSocket serverSocket = new ServerSocket(8993);
+        try (ServerSocket serverSocket = new ServerSocket(setting.getPort());
              FileInputStream inLog = new FileInputStream("server/src/main/resources/log.config")){
             LogManager.getLogManager().readConfiguration(inLog);
             while (true){
@@ -62,9 +65,8 @@ public class ChatServer implements ConnectionListener {
 
     private void sendToAll (String msg){
         System.out.println(msg);
-        final int size = connections.size();
-        for (int i = 0; i < size; i++) {
-            connections.get(i).sendMesage(msg);
+        for (Connection connection : connections) {
+            connection.sendMessage(msg);
         }
     }
 
