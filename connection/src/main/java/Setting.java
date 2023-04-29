@@ -13,7 +13,7 @@ public final class Setting {
         return port;
     }
 
-    private Setting() {
+    private Setting () {
         try (BufferedReader fileReader = new BufferedReader(new FileReader("Setting.txt"))) {
             String line;
             while ((line = fileReader.readLine()) != null) {

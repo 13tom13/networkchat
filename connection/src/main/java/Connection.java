@@ -5,6 +5,11 @@ import java.nio.charset.StandardCharsets;
 public class Connection {
 
     private final Socket socket;
+
+    protected Thread getThread() {
+        return thread;
+    }
+
     private final Thread thread;
     private final ConnectionListener listener;
     private final BufferedReader in;
@@ -28,8 +33,6 @@ public class Connection {
                         listener.receiveString(Connection.this, in.readLine());
                     }
                 } catch (IOException e) {
-                    listener.exception(Connection.this, e);
-                } finally {
                     listener.disconnect(Connection.this);
                 }
             }
@@ -42,7 +45,6 @@ public class Connection {
             out.write(msg + "\r\n");
             out.flush();
         } catch (IOException e) {
-            listener.exception(Connection.this, e);
             disconnect();
         }
     }
@@ -52,6 +54,7 @@ public class Connection {
         try {
             socket.close();
         } catch (IOException e) {
+            System.out.println("я тут");
             listener.exception(Connection.this, e);
         }
     }
