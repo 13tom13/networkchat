@@ -54,7 +54,6 @@ public class ChatServer implements ConnectionListener {
 
     private void sendToAll(String msg) {
         System.out.println(msg);
-
         for (Connection connection : connections) {
             connection.sendMessage(msg);
         }
