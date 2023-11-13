@@ -1,4 +1,4 @@
-# <span style="color:#59afe1"> **Networkchat**.</span>
+# <span style="color:#59afe1"> **Networkchat**</span>
 ## *Многопоточный сетевой чат*
 ### Модули:
 
